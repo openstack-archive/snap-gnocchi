@@ -1,0 +1,106 @@
+name: gnocchi
+version: pike
+summary: Time Series Database as a Service
+description: |
+  Gnocchi is an open-source, multi-tenant timeseries, metrics and resources database. It provides an HTTP REST interface to create and manipulate the data. It is designed to store metrics at a very large scale while providing access to metrics and resources information and history.
+confinement: strict
+grade: devel
+
+apps:
+  # If the OpenStack service has an API that runs behind uwsgi+nginx, the folowing
+  # app is required.
+  uwsgi:
+    command: snap-openstack gnocchi-uwsgi
+    daemon: simple
+    plugs:
+      - network-bind
+  # If the OpenStack service has an API that runs behind uwsgi+nginx, the folowing
+  # app is required.
+  nginx:
+    command: snap-openstack gnocchi-nginx
+    daemon: forking
+    plugs:
+      - network-bind
+  # Following is an example of creating a command app.
+  manage:
+    command: snap-openstack gnocchi-manage
+    plugs:
+      - network
+
+parts:
+  # Following is an example of defining a part to build an OpenStack project
+  gnocchi:
+    plugin: python
+    python-version: python2
+    source: http://tarballs.openstack.org/gnocchi/gnocchi-stable-pike.tar.gz
+    python-packages:
+      # You may need to pull in additional python packages
+      - python-memcached
+      - pymysql
+      # If the OpenStack service has an API that runs behind uwsgi+nginx, uwsgi is required.
+      - uwsgi
+      - git+https://github.com/openstack/snap.openstack#egg=snap.openstack
+    constraints: https://raw.githubusercontent.com/openstack/requirements/stable/pike/upper-constraints.txt
+    build-packages:
+      - gcc
+      - libffi-dev
+      - libssl-dev
+      - libxml2-dev
+      - libxslt1-dev
+    install: |
+      touch $SNAPCRAFT_PART_INSTALL/lib/python2.7/site-packages/paste/__init__.py
+      touch $SNAPCRAFT_PART_INSTALL/lib/python2.7/site-packages/repoze/__init__.py
+      export SNAP_ROOT="../../.."
+      export SNAP_SITE_PACKAGES="$SNAPCRAFT_PART_INSTALL/lib/python2.7/site-packages"
+      patch -d $SNAP_SITE_PACKAGES -p1 < $SNAP_ROOT/patches/oslo-config-dirs.patch
+  templates:
+    after: [gnocchi]
+    plugin: dump
+    source: snap
+  # Following is an example of including the OpenStack project's config
+  config:
+    after: [gnocchi]
+    plugin: dump
+    source: http://tarballs.openstack.org/gnocchi/gnocchi-stable-pike.tar.gz
+    organize:
+      etc/*.conf: etc/gnocchi/
+      etc/*.ini: etc/gnocchi/
+      etc/*.json: etc/gnocchi/
+      etc/*.templates: etc/gnocchi/
+    filesets:
+      etc:
+        - etc/gnocchi/*.conf
+        - etc/gnocchi/*.ini
+        - etc/gnocchi/*.json
+        - etc/gnocchi/*.templates
+    stage: [$etc]
+    prime: [$etc]
+  # If the OpenStack service has an API that runs behind uwsgi+nginx, the following
+  # part is required.
+  nginx:
+    source: http://www.nginx.org/download/nginx-1.13.0.tar.gz
+    plugin: autotools
+    configflags:
+      - --prefix=/usr
+      - --http-log-path=/var/snap/gnocchi/common/log/nginx-access.log
+      - --error-log-path=/var/snap/gnocchi/common/log/nginx-error.log
+      - --lock-path=/var/snap/gnocchi/common/lock/nginx.lock
+      - --pid-path=/var/snap/gnocchi/common/run/nginx.pid
+      - --http-client-body-temp-path=/var/snap/gnocchi/common/lib/nginx_client_body
+      - --http-proxy-temp-path=/var/snap/gnocchi/common/lib/nginx_proxy
+      - --http-fastcgi-temp-path=/var/snap/gnocchi/common/lib/nginx_fastcgi
+      - --http-uwsgi-temp-path=/var/snap/gnocchi/common/lib/nginx_uwsgi
+      - --http-scgi-temp-path=/var/snap/gnocchi/common/lib/nginx_scgi
+      - --with-http_ssl_module
+    build-packages:
+      - libpcre3-dev
+      - libssl-dev
+    prepare: |
+      export SNAP_ROOT="../../.."
+      export SNAP_SOURCE="$SNAP_ROOT/parts/nginx/build"
+      patch -d $SNAP_SOURCE -p1 < $SNAP_ROOT/patches/drop-nginx-setgroups.patch
+  # If the OpenStack service has an API that runs behind uwsgi+nginx, the following
+  # part is required.
+  libxml2:
+    source: http://xmlsoft.org/sources/libxml2-2.9.4.tar.gz
+    plugin: autotools
