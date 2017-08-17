@@ -5,33 +5,32 @@ setup:
     - "{snap_common}/lock"
     - "{snap_common}/log"
     - "{snap_common}/run"
-    # If the OpenStack service has an API that runs behind uwsgi+nginx,
-    # define uwsgi and nginx etc dirs.
     - "{snap_common}/etc/nginx/sites-enabled"
     - "{snap_common}/etc/nginx/snap/sites-enabled"
     - "{snap_common}/etc/uwsgi/snap"
   templates:
-    # The gnocchi snap will likely require a template for the corresponding
-    # OpenStack service(s). For example, you may need to render a template such
-    # as the following.
     gnocchi-snap.conf.j2: "{snap_common}/etc/gnocchi/gnocchi.conf.d/gnocchi-snap.conf"
-    # If the OpenStack service has an API that runs behind uwsgi+nginx,
-    # render nginx config templates.
     gnocchi-nginx.conf.j2: "{snap_common}/etc/nginx/snap/sites-enabled/gnocchi.conf"
     nginx.conf.j2: "{snap_common}/etc/nginx/snap/nginx.conf"
 entry_points:
-  # This is where entry_points are defined for the OpenStack service. For example,
-  # the service may have a database command-line tool such as the following.
-  gnocchi-manage:
-    binary: "{snap}/bin/gnocchi-manage"
+  gnocchi-api:
+    binary: "{snap}/bin/gnocchi-api"
     config-files:
       - "{snap}/etc/gnocchi/gnocchi.conf"
     config-files-override:
       - "{snap_common}/etc/gnocchi/gnocchi.conf"
     config-dirs:
       - "{snap_common}/etc/gnocchi/gnocchi.conf.d"
-  # If the OpenStack service has an API that runs behind uwsgi+nginx, the
-  # following entry_point must be defined.
+    log-file: "{snap_common}/log/gnocchi-api.log"
+  gnocchi-metricd:
+    binary: "{snap}/bin/gnocchi-metricd"
+    config-files:
+      - "{snap}/etc/gnocchi/gnocchi.conf"
+    config-files-override:
+      - "{snap_common}/etc/gnocchi/gnocchi.conf"
+    config-dirs:
+      - "{snap_common}/etc/gnocchi/gnocchi.conf.d"
+    log-file: "{snap_common}/log/gnocchi-metricd.log"
   gnocchi-uwsgi:
     type: uwsgi
     uwsgi-dir: "{snap_common}/etc/uwsgi/snap"
@@ -46,8 +45,6 @@ entry_points:
     log-file: "{snap_common}/log/gnocchi-api.log"
     templates:
       gnocchi-api.ini.j2: "{snap_common}/etc/uwsgi/snap/gnocchi-api.ini"
-  # If the OpenStack service has an API that runs behind uwsgi+nginx, the
-  # following entry_point must be defined.
   gnocchi-nginx:
     type: nginx
     config-file: "{snap_common}/etc/nginx/snap/nginx.conf"

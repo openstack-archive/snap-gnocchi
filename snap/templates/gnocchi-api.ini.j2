@@ -4,8 +4,8 @@
 # the service it provides, and you may even need to provide multiple uwsgi files
 # if there is more than one wsgi application.
 [uwsgi]
-wsgi-file = {{ snap }}/bin/gnocchi-wsgi-file-name
-uwsgi-socket = {{ snap_common }}/run/api-name.sock
+wsgi-file = {{ snap }}/bin/gnocchi-api
+uwsgi-socket = {{ snap_common }}/run/gnocchi-api.sock
 buffer-size = 65535
 master = true
 enable-threads = true
