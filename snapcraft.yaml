@@ -11,16 +11,6 @@ confinement: strict
 grade: devel
 
 apps:
-  api:
-    command: snap-openstack gnocchi-api
-    daemon: simple
-    plugs:
-      - network-bind
-  metricd:
-      command: snap-openstack gnocchi-metricd
-      daemon: simple
-      plugs:
-        - network
   uwsgi:
     command: snap-openstack gnocchi-uwsgi
     daemon: simple
@@ -31,51 +21,75 @@ apps:
     daemon: forking
     plugs:
       - network-bind
-  gnocchi-config-generator:
-    command: bin/gnocchi-config-generator
-  gnocchi-upgrade:
-    command: bin/gnocchi-upgrade
+  metricd:
+    command: snap-openstack gnocchi-metricd
+    daemon: simple
+    plugs:
+      - network
+  statsd:
+    command: snap-openstack gnocchi-statsd
+    daemon: simple
+    plugs:
+      - network
+  upgrade:
+    command: snap-openstack gnocchi-upgrade
+    plugs:
+      - network
+  change-sack-size:
+    command: snap-openstack gnocchi-change-sack-size
+    plugs:
+      - network
+  config-generator:
+    command: snap-openstack gnocchi-config-generator
+    plugs:
+      - network
 
 parts:
   gnocchi:
     plugin: python
     python-version: python2
-    source: http://tarballs.openstack.org/gnocchi/gnocchi-stable-3.1.tar.gz
+    source: https://pypi.debian.net/gnocchi/gnocchi-4.0.2.tar.gz
     python-packages:
-      - tooz
-      - oslo.db
+      - futurist
+      - keystonemiddleware
       - lz4
-      - python-memcached
+      - oslo.db
       - pymysql
+      - python-memcached
+      - sqlalchemy-utils
+      - tooz
       - uwsgi
       - git+https://github.com/openstack/snap.openstack#egg=snap.openstack
-    # constraints: https://raw.githubusercontent.com/openstack/requirements/stable/ocata/upper-constraints.txt
+    constraints: https://raw.githubusercontent.com/openstack/requirements/stable/ocata/upper-constraints.txt
     build-packages:
       - gcc
       - libffi-dev
       - libssl-dev
       - libxml2-dev
       - libxslt1-dev
+    stage-packages:
+      - memcached
     install: |
       touch $SNAPCRAFT_PART_INSTALL/lib/python2.7/site-packages/paste/__init__.py
       touch $SNAPCRAFT_PART_INSTALL/lib/python2.7/site-packages/repoze/__init__.py
-      export SNAP_ROOT="../../.."
+      export SNAP_ROOT="../../../"
       export SNAP_SITE_PACKAGES="$SNAPCRAFT_PART_INSTALL/lib/python2.7/site-packages"
-      # patch -d $SNAP_SITE_PACKAGES -p1 < $SNAP_ROOT/patches/oslo-config-dirs.patch
+      patch -d $SNAP_SITE_PACKAGES -p1 < $SNAP_ROOT/patches/oslo-config-dirs.patch
   templates:
     after: [gnocchi]
     plugin: dump
     source: snap
-  # Following is an example of including the OpenStack project's config
   config:
     after: [gnocchi]
     plugin: dump
-    source: http://tarballs.openstack.org/gnocchi/gnocchi-stable-3.1.tar.gz
+    source: https://pypi.debian.net/gnocchi/gnocchi-4.0.2.tar.gz
     organize:
       etc/*.conf: etc/gnocchi/
       etc/*.ini: etc/gnocchi/
       etc/*.json: etc/gnocchi/
       etc/*.templates: etc/gnocchi/
+      gnocchi/rest/*.ini: etc/gnocchi/
+      gnocchi/rest/*.json: etc/gnocchi/
     filesets:
       etc:
         - etc/gnocchi/*.conf
