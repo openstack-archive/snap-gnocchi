@@ -14,9 +14,14 @@ class SnapstackTest(unittest.TestCase):
         gnocchi = Step(
             snap='gnocchi',
             script_loc='./tests/',
-            scripts=['gnocchi.sh'],
+            scripts=['gnocchi_setup.sh',
+                     'gnocchi_daemons.sh',
+                     'gnocchi_commands.sh'],
             files=[
-                'etc/snap-gnocchi/gnocchi/gnocchi.conf'
+                'etc/snap-gnocchi/gnocchi/gnocchi.conf.d/indexer.conf',
+                'etc/snap-gnocchi/gnocchi/gnocchi.conf.d/keystone.conf',
+                'etc/snap-gnocchi/gnocchi/gnocchi.conf.d/statsd.conf',
+                'etc/snap-gnocchi/gnocchi/gnocchi.conf.d/storage.conf',
             ],
             snap_store=False)
 

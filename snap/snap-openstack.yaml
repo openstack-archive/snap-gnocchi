@@ -1,27 +1,18 @@
 setup:
   dirs:
     - "{snap_common}/etc/gnocchi/gnocchi.conf.d"
+    - "{snap_common}/etc/nginx/sites-enabled"
+    - "{snap_common}/etc/nginx/snap/sites-enabled"
+    - "{snap_common}/etc/uwsgi/snap"
     - "{snap_common}/lib"
     - "{snap_common}/lock"
     - "{snap_common}/log"
     - "{snap_common}/run"
-    - "{snap_common}/etc/nginx/sites-enabled"
-    - "{snap_common}/etc/nginx/snap/sites-enabled"
-    - "{snap_common}/etc/uwsgi/snap"
   templates:
     gnocchi-snap.conf.j2: "{snap_common}/etc/gnocchi/gnocchi.conf.d/gnocchi-snap.conf"
     gnocchi-nginx.conf.j2: "{snap_common}/etc/nginx/snap/sites-enabled/gnocchi.conf"
     nginx.conf.j2: "{snap_common}/etc/nginx/snap/nginx.conf"
 entry_points:
-  gnocchi-api:
-    binary: "{snap}/bin/gnocchi-api"
-    config-files:
-      - "{snap}/etc/gnocchi/gnocchi.conf"
-    config-files-override:
-      - "{snap_common}/etc/gnocchi/gnocchi.conf"
-    config-dirs:
-      - "{snap_common}/etc/gnocchi/gnocchi.conf.d"
-    log-file: "{snap_common}/log/gnocchi-api.log"
   gnocchi-metricd:
     binary: "{snap}/bin/gnocchi-metricd"
     config-files:
@@ -31,6 +22,39 @@ entry_points:
     config-dirs:
       - "{snap_common}/etc/gnocchi/gnocchi.conf.d"
     log-file: "{snap_common}/log/gnocchi-metricd.log"
+  gnocchi-statsd:
+    binary: "{snap}/bin/gnocchi-statsd"
+    config-files:
+      - "{snap}/etc/gnocchi/gnocchi.conf"
+    config-files-override:
+      - "{snap_common}/etc/gnocchi/gnocchi.conf"
+    config-dirs:
+      - "{snap_common}/etc/gnocchi/gnocchi.conf.d"
+    log-file: "{snap_common}/log/gnocchi-statsd.log"
+  gnocchi-upgrade:
+    binary: "{snap}/bin/gnocchi-upgrade"
+    config-files:
+      - "{snap}/etc/gnocchi/gnocchi.conf"
+    config-files-override:
+      - "{snap_common}/etc/gnocchi/gnocchi.conf"
+    config-dirs:
+      - "{snap_common}/etc/gnocchi/gnocchi.conf.d"
+  gnocchi-change-sack-size:
+    binary: "{snap}/bin/gnocchi-change-sack-size"
+    config-files:
+      - "{snap}/etc/gnocchi/gnocchi.conf"
+    config-files-override:
+      - "{snap_common}/etc/gnocchi/gnocchi.conf"
+    config-dirs:
+      - "{snap_common}/etc/gnocchi/gnocchi.conf.d"
+  gnocchi-config-generator:
+    binary: "{snap}/bin/gnocchi-config-generator"
+    config-files:
+      - "{snap}/etc/gnocchi/gnocchi.conf"
+    config-files-override:
+      - "{snap_common}/etc/gnocchi/gnocchi.conf"
+    config-dirs:
+      - "{snap_common}/etc/gnocchi/gnocchi.conf.d"
   gnocchi-uwsgi:
     type: uwsgi
     uwsgi-dir: "{snap_common}/etc/uwsgi/snap"
