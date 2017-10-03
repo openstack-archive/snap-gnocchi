@@ -26,11 +26,6 @@ apps:
     daemon: simple
     plugs:
       - network
-  statsd:
-    command: snap-openstack gnocchi-statsd
-    daemon: simple
-    plugs:
-      - network
   upgrade:
     command: snap-openstack gnocchi-upgrade
     plugs:
@@ -48,7 +43,7 @@ parts:
   gnocchi:
     plugin: python
     python-version: python2
-    source: https://pypi.debian.net/gnocchi/gnocchi-4.0.2.tar.gz
+    source: https://pypi.debian.net/gnocchi/gnocchi-4.0.3.tar.gz
     python-packages:
       - futurist
       - keystonemiddleware
@@ -69,6 +64,7 @@ parts:
       - libxslt1-dev
     stage-packages:
       - memcached
+      - python-rados
     install: |
       touch $SNAPCRAFT_PART_INSTALL/lib/python2.7/site-packages/paste/__init__.py
       touch $SNAPCRAFT_PART_INSTALL/lib/python2.7/site-packages/repoze/__init__.py
@@ -82,7 +78,7 @@ parts:
   config:
     after: [gnocchi]
     plugin: dump
-    source: https://pypi.debian.net/gnocchi/gnocchi-4.0.2.tar.gz
+    source: https://pypi.debian.net/gnocchi/gnocchi-4.0.3.tar.gz
     organize:
       etc/*.conf: etc/gnocchi/
       etc/*.ini: etc/gnocchi/
