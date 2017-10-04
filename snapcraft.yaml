@@ -48,11 +48,9 @@ parts:
       - futurist
       - keystonemiddleware
       - lz4
-      - oslo.db
-      - pymysql
-      - python-memcached
+      - oslo.db[mysql]
       - sqlalchemy-utils
-      - tooz
+      - tooz[memcached]
       - uwsgi
       - git+https://github.com/openstack/snap.openstack#egg=snap.openstack
     constraints: https://raw.githubusercontent.com/openstack/requirements/stable/ocata/upper-constraints.txt
