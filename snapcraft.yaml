@@ -47,6 +47,7 @@ parts:
     python-packages:
       - futurist
       - keystonemiddleware
+      - python-memcached
       - lz4
       - oslo.db[mysql]
       - sqlalchemy-utils
@@ -64,6 +65,10 @@ parts:
       - python-rados
     install: |
       touch $SNAPCRAFT_PART_INSTALL/lib/python2.7/site-packages/paste/__init__.py
+      touch $SNAPCRAFT_PART_INSTALL/lib/python2.7/site-packages/repoze/__init__.py
+      export SNAP_ROOT="../../../"
+      export SNAP_SITE_PACKAGES="$SNAPCRAFT_PART_INSTALL/lib/python2.7/site-packages"
+      patch -d $SNAP_SITE_PACKAGES -p1 < $SNAP_ROOT/patches/oslo-config-prefer-snap-common.patch
   templates:
     after: [gnocchi]
     plugin: dump
