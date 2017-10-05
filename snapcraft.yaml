@@ -47,6 +47,7 @@ parts:
     python-packages:
       - futurist
       - keystonemiddleware
+      - python-memcached
       - lz4
       - oslo.db[mysql]
       - sqlalchemy-utils
