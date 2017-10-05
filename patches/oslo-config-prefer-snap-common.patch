@@ -1,0 +1,18 @@
+Description: Ensure that SNAP_COMMON is used in preference to $SNAP
+Author: James Page <james.page@ubuntu.com>
+Forwarded: https://review.openstack.org/509724
+
+diff --git a/oslo_config/cfg.py b/oslo_config/cfg.py
+index cbdcdfa..9365956 100644
+--- a/oslo_config/cfg.py
++++ b/oslo_config/cfg.py
+@@ -672,8 +672,8 @@ def _get_config_dirs(project=None):
+         _fixpath('~'),
+         os.path.join('/etc', project) if project else None,
+         '/etc',
+-        os.path.join(snap, "etc", project) if snap and project else None,
+         os.path.join(snap_c, "etc", project) if snap_c and project else None,
++        os.path.join(snap, "etc", project) if snap and project else None,
+     ]
+     return [x for x in cfg_dirs if x]
+ 
