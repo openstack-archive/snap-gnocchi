@@ -1,5 +1,5 @@
 name: gnocchi
-version: 4.0.3
+version: 3.1.11
 summary: Time Series Database as a Service
 description: |
   Gnocchi is an open-source, multi-tenant timeseries, metrics and
@@ -43,7 +43,7 @@ parts:
   gnocchi:
     plugin: python
     python-version: python2
-    source: https://pypi.debian.net/gnocchi/gnocchi-4.0.3.tar.gz
+    source: https://pypi.debian.net/gnocchi/gnocchi-3.1.11.tar.gz
     python-packages:
       - futurist
       - keystonemiddleware
@@ -53,7 +53,6 @@ parts:
       - sqlalchemy-utils
       - tooz[memcached]
       - uwsgi
-      - cradox
       - git+https://github.com/openstack/snap.openstack#egg=snap.openstack
     build-packages:
       - gcc
@@ -61,9 +60,9 @@ parts:
       - libssl-dev
       - libxml2-dev
       - libxslt1-dev
-      - librados-dev
     stage-packages:
       - memcached
+      - python-rados
     install: |
       touch $SNAPCRAFT_PART_INSTALL/lib/python2.7/site-packages/paste/__init__.py
       touch $SNAPCRAFT_PART_INSTALL/lib/python2.7/site-packages/repoze/__init__.py
@@ -77,7 +76,7 @@ parts:
   config:
     after: [gnocchi]
     plugin: dump
-    source: https://pypi.debian.net/gnocchi/gnocchi-4.0.3.tar.gz
+    source: https://pypi.debian.net/gnocchi/gnocchi-3.1.11.tar.gz
     organize:
       etc/*.conf: etc/gnocchi/
       etc/*.ini: etc/gnocchi/
