@@ -53,6 +53,7 @@ parts:
       - sqlalchemy-utils
       - tooz[memcached]
       - uwsgi
+      - cradox
       - git+https://github.com/openstack/snap.openstack#egg=snap.openstack
     build-packages:
       - gcc
@@ -60,10 +61,9 @@ parts:
       - libssl-dev
       - libxml2-dev
       - libxslt1-dev
+      - librados-dev
     stage-packages:
       - memcached
-      - librados2
-      - python-rados
     install: |
       touch $SNAPCRAFT_PART_INSTALL/lib/python2.7/site-packages/paste/__init__.py
       touch $SNAPCRAFT_PART_INSTALL/lib/python2.7/site-packages/repoze/__init__.py
