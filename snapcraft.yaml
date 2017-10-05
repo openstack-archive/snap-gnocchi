@@ -62,6 +62,7 @@ parts:
       - libxslt1-dev
     stage-packages:
       - memcached
+      - librados2
       - python-rados
     install: |
       touch $SNAPCRAFT_PART_INSTALL/lib/python2.7/site-packages/paste/__init__.py
