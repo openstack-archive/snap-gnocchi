@@ -1,5 +1,5 @@
 name: gnocchi
-version: ocata
+version: 4.0.3
 summary: Time Series Database as a Service
 description: |
   Gnocchi is an open-source, multi-tenant timeseries, metrics and
@@ -53,7 +53,6 @@ parts:
       - tooz[memcached]
       - uwsgi
       - git+https://github.com/openstack/snap.openstack#egg=snap.openstack
-    constraints: https://raw.githubusercontent.com/openstack/requirements/stable/ocata/upper-constraints.txt
     build-packages:
       - gcc
       - libffi-dev
@@ -65,10 +64,6 @@ parts:
       - python-rados
     install: |
       touch $SNAPCRAFT_PART_INSTALL/lib/python2.7/site-packages/paste/__init__.py
-      touch $SNAPCRAFT_PART_INSTALL/lib/python2.7/site-packages/repoze/__init__.py
-      export SNAP_ROOT="../../../"
-      export SNAP_SITE_PACKAGES="$SNAPCRAFT_PART_INSTALL/lib/python2.7/site-packages"
-      patch -d $SNAP_SITE_PACKAGES -p1 < $SNAP_ROOT/patches/oslo-config-dirs.patch
   templates:
     after: [gnocchi]
     plugin: dump
