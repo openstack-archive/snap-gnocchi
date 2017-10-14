@@ -25,7 +25,7 @@ apps:
     command: snap-openstack gnocchi-metricd
     daemon: simple
     plugs:
-      - network
+      - network-bind
   upgrade:
     command: snap-openstack gnocchi-upgrade
     plugs:
