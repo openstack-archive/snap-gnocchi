@@ -8,7 +8,7 @@ description: |
   scale while providing access to metrics and resources information
   and history.
 confinement: strict
-grade: devel
+grade: stable
 
 apps:
   uwsgi:
