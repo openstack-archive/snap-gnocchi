@@ -43,7 +43,7 @@ parts:
   gnocchi:
     plugin: python
     python-version: python2
-    source: https://pypi.debian.net/gnocchi/gnocchi-3.1.11.tar.gz
+    source: https://pypi.python.org/packages/b2/50/71d1057dc1988cf7548e7e096c9e883845aead7e8fa06a5666c56e483c97/gnocchi-3.1.11.tar.gz
     python-packages:
       - futurist
       - keystonemiddleware
@@ -65,7 +65,6 @@ parts:
       - python-rados
     install: |
       touch $SNAPCRAFT_PART_INSTALL/lib/python2.7/site-packages/paste/__init__.py
-      touch $SNAPCRAFT_PART_INSTALL/lib/python2.7/site-packages/repoze/__init__.py
       export SNAP_ROOT="../../../"
       export SNAP_SITE_PACKAGES="$SNAPCRAFT_PART_INSTALL/lib/python2.7/site-packages"
       patch -d $SNAP_SITE_PACKAGES -p1 < $SNAP_ROOT/patches/oslo-config-prefer-snap-common.patch
@@ -76,7 +75,7 @@ parts:
   config:
     after: [gnocchi]
     plugin: dump
-    source: https://pypi.debian.net/gnocchi/gnocchi-3.1.11.tar.gz
+    source: https://pypi.python.org/packages/b2/50/71d1057dc1988cf7548e7e096c9e883845aead7e8fa06a5666c56e483c97/gnocchi-3.1.11.tar.gz
     organize:
       etc/*.conf: etc/gnocchi/
       etc/*.ini: etc/gnocchi/
