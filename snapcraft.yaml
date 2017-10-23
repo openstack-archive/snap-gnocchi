@@ -1,5 +1,5 @@
 name: gnocchi
-version: 3.1.11
+version: 4.0.3
 summary: Time Series Database as a Service
 description: |
   Gnocchi is an open-source, multi-tenant timeseries, metrics and
@@ -12,7 +12,7 @@ grade: stable
 
 apps:
   uwsgi:
-    command: snap-openstack gnocchi-uwsgi
+    command: run-wrap snap-openstack gnocchi-uwsgi
     daemon: simple
     plugs:
       - network-bind
@@ -22,20 +22,20 @@ apps:
     plugs:
       - network-bind
   metricd:
-    command: snap-openstack gnocchi-metricd
+    command: run-wrap snap-openstack gnocchi-metricd
     daemon: simple
     plugs:
       - network-bind
   upgrade:
-    command: snap-openstack gnocchi-upgrade
+    command: run-wrap snap-openstack gnocchi-upgrade
     plugs:
       - network
   change-sack-size:
-    command: snap-openstack gnocchi-change-sack-size
+    command: run-wrap snap-openstack gnocchi-change-sack-size
     plugs:
       - network
   config-generator:
-    command: snap-openstack gnocchi-config-generator
+    command: run-wrap snap-openstack gnocchi-config-generator
     plugs:
       - network
 
@@ -43,7 +43,7 @@ parts:
   gnocchi:
     plugin: python
     python-version: python2
-    source: https://pypi.python.org/packages/b2/50/71d1057dc1988cf7548e7e096c9e883845aead7e8fa06a5666c56e483c97/gnocchi-3.1.11.tar.gz
+    source: https://pypi.python.org/packages/31/04/f4a0d82279a9be0638e0f79a141e2f6295b18ad6c65b53ef716625fa712f/gnocchi-4.0.3.tar.gz
     python-packages:
       - futurist
       - keystonemiddleware
@@ -75,7 +75,7 @@ parts:
   config:
     after: [gnocchi]
     plugin: dump
-    source: https://pypi.python.org/packages/b2/50/71d1057dc1988cf7548e7e096c9e883845aead7e8fa06a5666c56e483c97/gnocchi-3.1.11.tar.gz
+    source: https://pypi.python.org/packages/31/04/f4a0d82279a9be0638e0f79a141e2f6295b18ad6c65b53ef716625fa712f/gnocchi-4.0.3.tar.gz
     organize:
       etc/*.conf: etc/gnocchi/
       etc/*.ini: etc/gnocchi/

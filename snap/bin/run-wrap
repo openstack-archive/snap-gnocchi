@@ -1,0 +1,9 @@
+#!/bin/sh
+# NOTE(jamespage): This is a shim that really should not be required.
+
+set -e
+
+export CEPH_LIBRARY_PATH=`find $SNAP/usr/lib -name "libceph-common.so" -exec dirname {} \;`
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$CEPH_LIBRARY_PATH
+
+exec $@
