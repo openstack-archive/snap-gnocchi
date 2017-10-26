@@ -44,6 +44,7 @@ parts:
     plugin: python
     python-version: python2
     source: https://pypi.python.org/packages/31/04/f4a0d82279a9be0638e0f79a141e2f6295b18ad6c65b53ef716625fa712f/gnocchi-4.0.3.tar.gz
+    constraints: https://raw.githubusercontent.com/openstack/requirements/stable/pike/upper-constraints.txt
     python-packages:
       - futurist
       - keystonemiddleware
@@ -92,7 +93,7 @@ parts:
     stage: [$etc]
     prime: [$etc]
   nginx:
-    source: http://www.nginx.org/download/nginx-1.13.0.tar.gz
+    source: http://www.nginx.org/download/nginx-1.12.2.tar.gz
     plugin: autotools
     configflags:
       - --prefix=/usr
@@ -113,6 +114,3 @@ parts:
       export SNAP_ROOT="../../.."
       export SNAP_SOURCE="$SNAP_ROOT/parts/nginx/build"
       patch -d $SNAP_SOURCE -p1 < $SNAP_ROOT/patches/drop-nginx-setgroups.patch
-  libxml2:
-    source: http://xmlsoft.org/sources/libxml2-2.9.4.tar.gz
-    plugin: autotools
